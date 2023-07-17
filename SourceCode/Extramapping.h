@@ -9,6 +9,7 @@ struct Truck
 {
 	int availWeight;
 	int availSize;
+        char route
 };
 
 struct Shipment {
