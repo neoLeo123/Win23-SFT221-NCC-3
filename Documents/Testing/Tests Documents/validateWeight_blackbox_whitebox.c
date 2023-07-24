@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include "mapping.h
 
 
 void test_validateWeightBlackBox() {
