@@ -1,14 +1,5 @@
 #include <stdio.h>
-
-int validateSize(double size) {
-    // Assume the implementation of validateSize() exists here.
-    // You can replace this with your actual implementation.
-    // For demonstration purposes, I'll just return 1 for valid sizes and 0 for invalid sizes.
-    if (size == 0.25 || size == 0.5 || size == 1.0)
-        return 1;
-    else
-        return 0;
-}
+#include "mapping.h"
 
 void test_validateSizeBlackBox() {
     // Test with a valid size
