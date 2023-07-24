@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include "mapping.h"
 
 void testValidateAddressWhiteBox() {
     // Test 1: Test with values in the valid range
