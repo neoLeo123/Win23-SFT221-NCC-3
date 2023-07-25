@@ -5,8 +5,7 @@
 #include "diy.h"
 //struct Truck Trucks[NUMTRUCKS];
 //struct Shipment shipment;
-struct Map populateMap()
-{
+struct Map populateMap() {
 	struct Map result = {
 		//0	1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4
 		//A B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y
@@ -42,18 +41,15 @@ struct Map populateMap()
 	return result;
 }
 
-int getNumRows(const struct Map* map)
-{
+int getNumRows(const struct Map* map) {
 	return map->numRows;
 }
 
-int getNumCols(const struct Map* map)
-{
+int getNumCols(const struct Map* map) {
 	return map->numCols;
 }
 
-void printMap(const struct Map* map, const int base1, const int alphaCols)
-{
+void printMap(const struct Map* map, const int base1, const int alphaCols) {
 	//              01234567890123456
 	//              1248F
 	char sym[] = { " XB?G?.?Y?-?*?+?P" };
@@ -62,32 +58,27 @@ void printMap(const struct Map* map, const int base1, const int alphaCols)
 	rowMax = map->numRows + base1;
 
 	printf("%4s", " ");
-	for (c = 0; c < map->numCols; c++)
-	{
+	for (c = 0; c < map->numCols; c++) {
 		if (alphaCols) printf("%c", 'A' + c);
 		else printf("%d", c % 10);
 	}
 	printf("\n");
 	printf("%4s", " ");
-	for (c = 0; c < map->numCols; c++)
-	{
+	for (c = 0; c < map->numCols; c++) {
 		printf("-");
 	}
 	printf("\n");
 
-	for (r = base1; r < rowMax; r++)
-	{
+	for (r = base1; r < rowMax; r++) {
 		printf("%3d|", r);
-		for (c = 0; c < map->numCols; c++)
-		{
+		for (c = 0; c < map->numCols; c++) {
 			printf("%c", sym[map->squares[r - base1][c]]);
 		}
 		printf("\n");
 	}
 }
 
-struct Route getBlueRoute()
-{
+struct Route getBlueRoute() {
 	struct Route result = {
 		{
 			{0, 0},
@@ -115,8 +106,7 @@ struct Route getBlueRoute()
 	return result;
 }
 
-struct Route getGreenRoute()
-{
+struct Route getGreenRoute() {
 	struct Route result = {
 		{
 			{0, 0},
@@ -137,15 +127,13 @@ struct Route getGreenRoute()
 			{7, 19},
 			{8, 19},
 			{9, 19},{9, 20},{9, 21},{9, 22},{9, 23},{9, 24}
-
 		},
 			42, GREEN
 	};
 	return result;
 }
 
-struct Route getYellowRoute()
-{
+struct Route getYellowRoute() {
 	struct Route result = {
 		{
 			{0, 0},
@@ -175,68 +163,57 @@ struct Route getYellowRoute()
 	return result;
 }
 
-struct Map addRoute(const struct Map* map, const struct Route* route)
-{
+struct Map addRoute(const struct Map* map, const struct Route* route) {
 	int r, c;
 	struct Map result = { {0}, 0 };
 
-	for (r = 0; r < map->numRows; r++)
-	{
-		for (c = 0; c < map->numCols; c++)
-		{
+	for (r = 0; r < map->numRows; r++) {
+		for (c = 0; c < map->numCols; c++) {
 			result.squares[r][c] = map->squares[r][c];
 		}
 	}
 	result.numRows = map->numRows;
 	result.numCols = map->numCols;
 
-	for (r = 0; r < route->numPoints; r++)
-	{
+	for (r = 0; r < route->numPoints; r++) {
 		result.squares[route->points[r].row][route->points[r].col] += route->routeSymbol;
 	}
 
 	return result;
 }
 
-void addPtToRoute(struct Route* route, struct Point pt)
-{
+void addPtToRoute(struct Route* route, struct Point pt) {
 	route->points[route->numPoints++] = pt;
 }
 
-void addPointToRoute(struct Route* route, const int row, const int col)
-{
+void addPointToRoute(struct Route* route, const int row, const int col) {
 	struct Point pt = { row, col };
 	addPtToRoute(route, pt);
 }
 
-void addPointToRouteIfNot(struct Route* route, const int row, const int col, const struct Point notThis)
-{
+void addPointToRouteIfNot(struct Route* route, const int row, const int col, const struct Point notThis) {
 	struct Point pt = { row, col };
 	if (notThis.row != row || notThis.col != col) addPtToRoute(route, pt);
 }
 
-double distance(const struct Point* p1, const struct Point* p2)
-{
+double distance(const struct Point* p1, const struct Point* p2) {
 	int deltaRow = p2->row - p1->row;
 	int deltaCol = p2->col - p1->col;
 
 	return sqrt((double)(deltaRow * deltaRow + deltaCol * deltaCol));
 }
 
-struct Route shortestPath(const struct Map* map, const struct Point start, const struct Point dest)
-{
+struct Route shortestPath(const struct Map* map, const struct Point start, const struct Point dest) {
 	struct Route result = { {0,0}, 0, DIVERSION };
 	struct Point last = { -1, -1 };
 	struct Point current = start;
 	struct Route possible = { {0,0},0,0 };
 	int close = 0;
 
-	while (!eqPt(current, dest) && close >= 0)
-	{
+	while (!eqPt(current, dest) && close >= 0) {
 		possible = getPossibleMoves(map, current, last);
 		close = getClosestPoint(&possible, dest);
-		if (close >= 0)
-		{
+		if (close >= 0) {
 			last = current;
 			current = possible.points[close];
 			addPtToRoute(&result, current);
@@ -246,20 +223,17 @@ struct Route shortestPath(const struct Map* map, const struct Point start, const
 	return result;
 }
 
-struct Route getPossibleMoves(const struct Map* map, const struct Point p1, const struct Point backpath)
-{
+struct Route getPossibleMoves(const struct Map* map, const struct Point p1, const struct Point backpath) {
 	struct Route result = { {0,0}, 0, DIVERSION };
 
-	if (p1.row > 0)
-	{
+	if (p1.row > 0) {
 		if (map->squares[p1.row - 1][p1.col] != 1) addPointToRouteIfNot(&result, p1.row - 1, p1.col, backpath);	// square above
 		if (p1.col > 0 && map->squares[p1.row - 1][p1.col - 1] != 1) addPointToRouteIfNot(&result, p1.row - 1, p1.col - 1, backpath);	// top left
 		if (p1.col < (map->numCols - 1) && map->squares[p1.row - 1][p1.col + 1] != 1) addPointToRouteIfNot(&result, p1.row - 1, p1.col + 1, backpath);	// top right
 	}
 	if (p1.col > 0 && map->squares[p1.row][p1.col - 1] != 1)addPointToRouteIfNot(&result, p1.row, p1.col - 1, backpath);	// left
 	if (p1.col < (map->numCols - 1) && map->squares[p1.row][p1.col + 1] != 1)addPointToRouteIfNot(&result, p1.row, p1.col + 1, backpath);	// right
-	if (p1.row < (map->numRows - 1))
-	{
+	if (p1.row < (map->numRows - 1)) {
 		if (map->squares[p1.row + 1][p1.col] != 1) addPointToRouteIfNot(&result, p1.row + 1, p1.col, backpath);	// square below
 		if (p1.col > 0 && map->squares[p1.row + 1][p1.col - 1] != 1) addPointToRouteIfNot(&result, p1.row + 1, p1.col - 1, backpath);	// bot left
 		if (p1.col < (map->numCols - 1) && map->squares[p1.row + 1][p1.col + 1] != 1) addPointToRouteIfNot(&result, p1.row + 1, p1.col + 1, backpath);	// top right
@@ -268,16 +242,13 @@ struct Route getPossibleMoves(const struct Map* map, const struct Point p1, cons
 	return result;
 }
 
-int getClosestPoint(const struct Route* route, const struct Point pt)
-{
+int getClosestPoint(const struct Route* route, const struct Point pt) {
 	int i, closestIdx = -1;
 	double closestDist = 999999.9, dist;
 
-	for (i = 0; i < route->numPoints; i++)
-	{
+	for (i = 0; i < route->numPoints; i++) {
 		dist = distance(&pt, &route->points[i]);
-		if (dist < closestDist)
-		{
+		if (dist < closestDist) {
 			closestDist = dist;
 			closestIdx = i;
 		}
@@ -285,8 +256,7 @@ int getClosestPoint(const struct Route* route, const struct Point pt)
 	return closestIdx;
 }
 
-int eqPt(const struct Point p1, const struct Point p2)
-{
+int eqPt(const struct Point p1, const struct Point p2) {
 	return p1.row == p2.row && p1.col == p2.col;
 }
 
@@ -309,10 +279,8 @@ int validateSize(double size) {
 	}
 }
 
-
-
-int validateAddress(int y, char x) {
-	if (y > 0 && y < 26 && x >= 'A' && x <= 'Y') {
+int validateAddress(char y, char x) {
+	if (y >= 0 && y <= MAP_ROWS && x >= 0 && x <= MAP_COLS) {
 		return 1;
 	}
 	else {
@@ -326,7 +294,8 @@ int findTruckForShipment(struct Map* deliveryMap, struct Truck Trucks[], struct 
 	int validTruckCount = 0;
 	for (int i = 0; i < NUMTRUCKS; i++) {
 		if (shipment.size <= Trucks[i].availSize && shipment.weight <= Trucks[i].availWeight) {
-			validTrucks[validTruckCount++] = i;
+			validTrucks[i] = 1;
+			validTruckCount++;
 		}
 	}
 
@@ -339,54 +308,87 @@ int findTruckForShipment(struct Map* deliveryMap, struct Truck Trucks[], struct 
 
 	// Find the closest point on each truck's route to the destination
 	int closestPoints[NUMTRUCKS];
-	for (int i = 0; i < validTruckCount; i++) {
-		struct Route route = getRouteFromTruck(Trucks[validTrucks[i]]);
-		closestPoints[i] = getClosestPoint(&route, destination);
+	for (int i = 0; i < NUMTRUCKS; i++) {
+		if (validTrucks[i] == 1) {
+			struct Route route = getRouteFromTruck(Trucks[i]);
+			closestPoints[i] = getClosestPoint(&route, destination);
+		}
 	}
 
 	// Find the shortest distance among the valid trucks' routes
 	double shortestDistance = -1;
-	for (int i = 0; i < validTruckCount; i++) {
-		struct Route route = getRouteFromTruck(Trucks[validTrucks[i]]);
-		double distance1 = distance(&route.points[0], &destination);
-		if (shortestDistance == -1 || distance1 < shortestDistance) {
-			shortestDistance = distance1;
+	for (int i = 0; i < NUMTRUCKS; i++) {
+		if (closestPoints[i] >= 0) {
+			struct Route route = getRouteFromTruck(Trucks[i]);
+			double distance1 = distance(&route.points[closestPoints[i]], &destination);
+			if (shortestDistance == -1 || distance1 < shortestDistance) {
+				shortestDistance = distance1;
+			}
 		}
 	}
 
 	// Filter the trucks that have the shortest distance
 	int shortestDistanceTrucks[NUMTRUCKS];
 	int shortestDistanceTruckCount = 0;
-	for (int i = 0; i < validTruckCount; i++) {
-		struct Route route = getRouteFromTruck(Trucks[validTrucks[i]]);
-		double distance1 = distance(&route.points[0], &destination);
-		if (distance1 == shortestDistance) {
-			shortestDistanceTrucks[shortestDistanceTruckCount++] = validTrucks[i];
+	for (int i = 0; i < NUMTRUCKS; i++) {
+		if (validTrucks[i] == 1) {
+			struct Route route = getRouteFromTruck(Trucks[i]);
+			double distance1 = distance(&route.points[closestPoints[i]], &destination);
+			if (distance1 == shortestDistance) {
+				shortestDistanceTrucks[i] = validTrucks[i];
+				shortestDistanceTruckCount++;
+			}
 		}
 	}
 
 	// If there is only one truck with the shortest path, return that truck
 	if (shortestDistanceTruckCount == 1) {
-		return shortestDistanceTrucks[0];
-	}
-
-	// Sort the trucks with equidistant paths based on available capacity remaining
-	for (int i = 0; i < shortestDistanceTruckCount - 1; i++) {
-		for (int j = i + 1; j < shortestDistanceTruckCount; j++) {
-			int capacity_i = (Trucks[shortestDistanceTrucks[i]].availWeight / 1000) < (Trucks[shortestDistanceTrucks[i]].availSize / 36) ? (Trucks[shortestDistanceTrucks[i]].availWeight / 1000) : (Trucks[shortestDistanceTrucks[i]].availSize / 36);
-			int capacity_j = (Trucks[shortestDistanceTrucks[j]].availWeight / 1000) < (Trucks[shortestDistanceTrucks[j]].availSize / 36) ? (Trucks[shortestDistanceTrucks[j]].availWeight / 1000) : (Trucks[shortestDistanceTrucks[j]].availSize / 36);
-
-			if (capacity_i > capacity_j) {
-				// Swap the trucks in the shortestDistanceTrucks array to achieve sorting
-				int temp = shortestDistanceTrucks[i];
-				shortestDistanceTrucks[i] = shortestDistanceTrucks[j];
-				shortestDistanceTrucks[j] = temp;
+		for (int i = 0; i < NUMTRUCKS; i++) {
+			if (shortestDistanceTrucks[i] == validTrucks[i]) {
+				return i;
 			}
 		}
 	}
 
+	double limitingFactors[NUMTRUCKS];
+	double maxFactor = 0;
+	int res = -1;
+	if (shortestDistanceTruckCount > 1) {
+		for (int i = 0; i < NUMTRUCKS; i++) {
+			if (shortestDistanceTrucks[i] == validTrucks[i]) {
+				double weightFactor = Trucks[i].availWeight * 1.0 / MAX_WEIGHT;
+				double sizeFactor = Trucks[i].availSize * 1.0 / MAX_SIZE;
+				limitingFactors[i] = weightFactor + sizeFactor;
+			}
+		}
+		for (int i = 0; i < NUMTRUCKS; i++) {
+			if (shortestDistanceTrucks[i] == validTrucks[i]) {
+				if (limitingFactors[i] > maxFactor) {
+					maxFactor = limitingFactors[i];
+					res = i;
+				}
+			}
+		}
+	}
+	return res;
+
+	// Sort the trucks with equidistant paths based on available capacity remaining
+	//for (int i = 0; i < shortestDistanceTruckCount - 1; i++) {
+	//	for (int j = i + 1; j < shortestDistanceTruckCount; j++) {
+	//		int capacity_i = (Trucks[shortestDistanceTrucks[i]].availWeight / 1000) < (Trucks[shortestDistanceTrucks[i]].availSize / 36) ? (Trucks[shortestDistanceTrucks[i]].availWeight / 1000) : (Trucks[shortestDistanceTrucks[i]].availSize / 36);
+	//		int capacity_j = (Trucks[shortestDistanceTrucks[j]].availWeight / 1000) < (Trucks[shortestDistanceTrucks[j]].availSize / 36) ? (Trucks[shortestDistanceTrucks[j]].availWeight / 1000) : (Trucks[shortestDistanceTrucks[j]].availSize / 36);
+
+	//		if (capacity_i > capacity_j) {
+	//			// Swap the trucks in the shortestDistanceTrucks array to achieve sorting
+	//			int temp = shortestDistanceTrucks[i];
+	//			shortestDistanceTrucks[i] = shortestDistanceTrucks[j];
+	//			shortestDistanceTrucks[j] = temp;
+	//		}
+	//	}
+	//}
+
 	// Return the index of the best truck for the shipment
-	return shortestDistanceTrucks[0];
+	//return shortestDistanceTrucks[0];
 }
 
 struct Route getRouteFromTruck(struct Truck truck) {

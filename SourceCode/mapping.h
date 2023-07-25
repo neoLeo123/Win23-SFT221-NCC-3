@@ -13,8 +13,7 @@
 /**
 * A map is a 2D raster representation of a map with contents of the map encoded as numeric values.
 */
-struct Map
-{
+struct Map {
 	int squares[MAP_ROWS][MAP_COLS];
 	int numRows;
 	int numCols;
@@ -23,9 +22,8 @@ struct Map
 /**
 * A point represents the row-column position of a square on a map.
 */
-struct Point
-{
-	int row;
+struct Point {
+	char row;
 	char col;
 };
 
@@ -33,8 +31,7 @@ struct Point
 * A route is a collection of points that are adjacent to one another and constitute a path from the
 * first point on the path to the last.
 */
-struct Route
-{
+struct Route {
 	struct Point points[MAX_ROUTE];
 	int numPoints;
 	char routeSymbol;
@@ -174,7 +171,7 @@ int eqPt(const struct Point p1, const struct Point p2);
 //==========================================================
 int validateWeight(double weight);
 int validateSize(double size);
-int validateAddress(int y, char x);
+int validateAddress(char y, char x);
 int findTruckForShipment(struct Map* deliveryMap, struct Truck Trucks[], struct Shipment shipment);
 struct Route getRouteFromTruck(struct Truck truck);
 #endif
