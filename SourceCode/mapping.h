@@ -1,7 +1,7 @@
 #pragma once
 #ifndef MAPPING_H
 #define MAPPING_H
-
+#define NUMTRUCKS 3
 #define MAP_ROWS 25
 #define MAP_COLS 25
 #define MAX_ROUTE 100
@@ -30,7 +30,7 @@ struct Point
 };
 
 /**
-* A route is a collection of points that are adjacent to one another and constitute a path from the 
+* A route is a collection of points that are adjacent to one another and constitute a path from the
 * first point on the path to the last.
 */
 struct Route
@@ -155,7 +155,7 @@ struct Route shortestPath(const struct Map* map, const struct Point start, const
 struct Route getPossibleMoves(const struct Map* map, const struct Point p1, const struct Point backpath);
 
 /**
-* Calculates the Euclidian distance from every point in a route to a single point and returns the 
+* Calculates the Euclidian distance from every point in a route to a single point and returns the
 * index of the point in the route which is closest to the point.
 * @param route - the route to use to find the closest point
 * @param pt - the point to to find the member of the route which is closest to this point
@@ -171,4 +171,10 @@ int getClosestPoint(const struct Route* route, const struct Point pt);
 */
 int eqPt(const struct Point p1, const struct Point p2);
 
+//==========================================================
+int validateWeight(double weight);
+int validateSize(double size);
+int validateAddress(int y, char x);
+int findTruckForShipment(struct Map* deliveryMap, struct Truck Trucks[], struct Shipment shipment);
+struct Route getRouteFromTruck(struct Truck truck);
 #endif
