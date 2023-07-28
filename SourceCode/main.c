@@ -45,8 +45,8 @@ int main(void)
 
 	shipment.weight = weight;
 	shipment.size = size;
-	shipment.dest.row = num;
-	shipment.dest.col = letter;
+	shipment.dest.row = num - 1;
+	shipment.dest.col = (int)(letter) - 65;
 
 	printf("%d", findTruckForShipment(&routeMap, truck, shipment));
 
