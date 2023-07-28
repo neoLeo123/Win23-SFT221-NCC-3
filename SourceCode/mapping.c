@@ -279,8 +279,8 @@ int validateSize(double size) {
 	}
 }
 
-int validateAddress(char y, char x) {
-	if (y >= 0 && y <= MAP_ROWS && x >= 0 && x <= MAP_COLS) {
+int validateAddress(int y, char x) {
+	if (y >= 1 && y <= MAP_ROWS && x >= 'A' && x <= 'Y') {
 		return 1;
 	}
 	else {
