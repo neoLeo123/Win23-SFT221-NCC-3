@@ -1,16 +1,13 @@
 #include <stdio.h>
-#include "mapping.h" // Include the header file with function prototypes and struct definitions
+#include "mapping.h" 
 #include "diy.h"
 
 void runIntegrationTests() {
 
 	int pass = 1;
-	// Create some test data for Trucks and shipment
-
-	// Create a map (you can initialize it as needed)
+	
 	struct Map deliveryMap;
-	// populateMap(&deliveryMap); // Uncomment and implement if necessary
-
+	
 	// Test 1: Yellow route
 	struct Truck Truck1[NUMTRUCKS] = {
 		{1000, 36, 'B'}, // Truck 0
@@ -161,12 +158,12 @@ void runIntegrationTests() {
 		pass = 0;
 	}
 
-	// Test 6: One truck not available
+	// Test 6: All available
 	struct Truck Truck6[NUMTRUCKS] = {
 	   {400, 35, 'B'}, {700, 34, 'G'}, {700, 33, 'Y'},
 	};
 	struct Shipment shipment6;
-	double weight6 = 400, size6 = 1.0;
+	double weight6 = 400, size6 = 1;
 	int yaxis6 = 14;  char xaxis6 = 'U';
 	if (validateWeight(weight6) == 1 && validateSize(size6) == 1 && validateAddress(yaxis6, xaxis6) == 1)
 	{
@@ -220,7 +217,7 @@ void runIntegrationTests() {
 		pass = 0;
 	}
 
-	// Test 8: Enough size/not enough weight
+	// Test 8: One truck not available
 	struct Truck Truck8[NUMTRUCKS] = {
 	   {500, 3, 'B'}, // Truck 0
 	   {100, 4, 'G'},  // Truck 1
@@ -282,7 +279,7 @@ void runIntegrationTests() {
 		pass = 0;
 	}
 
-	// Test 10: Enough weight/not enough size
+	// Test 10: Two trucks not available
 	struct Truck Truck10[NUMTRUCKS] = {
 	   {700, 1, 'B'}, // Truck 0
 	   {700, 0.5, 'G'},  // Truck 1
@@ -313,7 +310,7 @@ void runIntegrationTests() {
 	}
 
 
-	// Test 11: Enough weight/not enough size
+	// Test 11: Enough size/not enough weight
 	struct Truck Truck11[NUMTRUCKS] = {
 	   {100, 1, 'B'}, // Truck 0
 	   {100, 1, 'G'},  // Truck 1
