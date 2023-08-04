@@ -23,8 +23,8 @@ struct Map {
 * A point represents the row-column position of a square on a map.
 */
 struct Point {
-	char row;
-	char col;
+	int row;
+	int col;
 };
 
 /**
@@ -171,7 +171,7 @@ int eqPt(const struct Point p1, const struct Point p2);
 //==========================================================
 int validateWeight(double weight);
 int validateSize(double size);
-int validateAddress(char y, char x);
+int validateAddress(int y, char x);
 int findTruckForShipment(struct Map* deliveryMap, struct Truck Trucks[], struct Shipment shipment);
 struct Route getRouteFromTruck(struct Truck truck);
 #endif
