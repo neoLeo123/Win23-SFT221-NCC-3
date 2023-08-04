@@ -372,23 +372,6 @@ int findTruckForShipment(struct Map* deliveryMap, struct Truck Trucks[], struct 
 	}
 	return res;
 
-	// Sort the trucks with equidistant paths based on available capacity remaining
-	//for (int i = 0; i < shortestDistanceTruckCount - 1; i++) {
-	//	for (int j = i + 1; j < shortestDistanceTruckCount; j++) {
-	//		int capacity_i = (Trucks[shortestDistanceTrucks[i]].availWeight / 1000) < (Trucks[shortestDistanceTrucks[i]].availSize / 36) ? (Trucks[shortestDistanceTrucks[i]].availWeight / 1000) : (Trucks[shortestDistanceTrucks[i]].availSize / 36);
-	//		int capacity_j = (Trucks[shortestDistanceTrucks[j]].availWeight / 1000) < (Trucks[shortestDistanceTrucks[j]].availSize / 36) ? (Trucks[shortestDistanceTrucks[j]].availWeight / 1000) : (Trucks[shortestDistanceTrucks[j]].availSize / 36);
-
-	//		if (capacity_i > capacity_j) {
-	//			// Swap the trucks in the shortestDistanceTrucks array to achieve sorting
-	//			int temp = shortestDistanceTrucks[i];
-	//			shortestDistanceTrucks[i] = shortestDistanceTrucks[j];
-	//			shortestDistanceTrucks[j] = temp;
-	//		}
-	//	}
-	//}
-
-	// Return the index of the best truck for the shipment
-	//return shortestDistanceTrucks[0];
 }
 
 struct Route getRouteFromTruck(struct Truck truck) {
