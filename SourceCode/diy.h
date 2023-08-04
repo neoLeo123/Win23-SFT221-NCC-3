@@ -7,14 +7,14 @@
 
 struct Truck
 {
-	int availWeight;
-	int availSize;
+	double availWeight;
+	double availSize;
 	char route;
 };
 
 struct Shipment {
-	int weight;
-	int size;
+	double weight;
+	double size;
 	struct Point dest;
 };
 
