@@ -203,21 +203,45 @@ double distance(const struct Point* p1, const struct Point* p2) {
 	return sqrt((double)(deltaRow * deltaRow + deltaCol * deltaCol));
 }
 
-struct Route shortestPath(const struct Map* map, const struct Point start, const struct Point dest) {
+//struct Route shortestPath(const struct Map* map, const struct Point start, const struct Point dest) {
+//	struct Route result = { {0,0}, 0, DIVERSION };
+//	struct Point last = { -1, -1 };
+//	struct Point current = start;
+//	struct Route possible = { {0,0},0,0 };
+//	int close = 0;
+//
+//	while (!eqPt(current, dest) && close >= 0) {
+//		possible = getPossibleMoves(map, current, last);
+//		close = getClosestPoint(&possible, dest);
+//		if (close >= 0) {
+//			last = current;
+//			current = possible.points[close];
+//			addPtToRoute(&result, current);
+//		}
+//	}
+//
+//	return result;
+//}
+
+struct Route shortestPath(const struct Map* map, const struct Point start, const struct Point dest)
+{
 	struct Route result = { {0,0}, 0, DIVERSION };
 	struct Point last = { -1, -1 };
 	struct Point current = start;
 	struct Route possible = { {0,0},0,0 };
-	int close = 0;
+	int close = 0, loop = 1;
 
-	while (!eqPt(current, dest) && close >= 0) {
+	while (close >= 0 && distance(&current, &dest) != 1 && result.numPoints < 99 && loop == 1)
+	{
 		possible = getPossibleMoves(map, current, last);
 		close = getClosestPoint(&possible, dest);
-		if (close >= 0) {
+		if (close >= 0)
+		{
 			last = current;
 			current = possible.points[close];
 			addPtToRoute(&result, current);
 		}
+		if (eqPt(current, dest)) loop = 0;
 	}
 
 	return result;
@@ -251,6 +275,7 @@ int getClosestPoint(const struct Route* route, const struct Point pt) {
 		if (dist < closestDist) {
 			closestDist = dist;
 			closestIdx = i;
+			
 		}
 	}
 	return closestIdx;
@@ -370,18 +395,22 @@ int findTruckForShipment(struct Map* deliveryMap, struct Truck Trucks[], struct 
 			}
 		}
 	}
+	//getPossibleMoves(&deliveryMap, closestPoints, shipment.dest);
 	return res;
 
 }
 
 struct Route getRouteFromTruck(struct Truck truck) {
-	struct Route returnRoute = { 0 };
+	struct Route returnRoute = { {0,0}, 0, 0 };
 	switch (truck.route) {
-	case 'Y': returnRoute = getYellowRoute();
+	case 'Y': 
+		returnRoute = getYellowRoute();
 		break;
-	case 'G': returnRoute = getGreenRoute();
+	case 'G': 
+		returnRoute = getGreenRoute();
 		break;
-	case 'B': returnRoute = getBlueRoute();
+	case 'B': 
+		returnRoute = getBlueRoute();
 		break;
 	}
 	return returnRoute;
