@@ -1,0 +1,7 @@
+﻿  diy.h
+  mapping.c
+  unitTest.c
+C:\Users\DracoSun\Desktop\unitTest\unitTest.c(119,9): warning C4047: 'initializing': 'int' differs in levels of indirection from 'void *'
+C:\Users\DracoSun\Desktop\unitTest\unitTest.c(120,10): warning C4047: 'initializing': 'char' differs in levels of indirection from 'void *'
+  Generating Code...
+  unitTest.vcxproj -> C:\Users\DracoSun\Desktop\unitTest\x64\Debug\unitTest.exe
