@@ -3,8 +3,7 @@
 #include "mapping.h"
 #include "math.h"
 #include "diy.h"
-//struct Truck Trucks[NUMTRUCKS];
-//struct Shipment shipment;
+
 struct Map populateMap() {
 	struct Map result = {
 		//0	1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4
@@ -401,9 +400,11 @@ int getInput(double* weight, double* size, char* letter, int* num, int* exit)
 {
 	
 	char str[4];
-	*exit = 0;
-	int valid = 1;
 	char temp[3];
+	int valid = 1;
+	
+	*exit = 0;
+	
 	printf("Enter shipment weight, box size, and destination (0 0 x to stop): ");
 	scanf("%lf %lf %s", weight, size, str);
 
