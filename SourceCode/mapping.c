@@ -3,8 +3,7 @@
 #include "mapping.h"
 #include "math.h"
 #include "diy.h"
-//struct Truck Trucks[NUMTRUCKS];
-//struct Shipment shipment;
+
 struct Map populateMap() {
 	struct Map result = {
 		//0	1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4
@@ -202,26 +201,6 @@ double distance(const struct Point* p1, const struct Point* p2) {
 
 	return sqrt((double)(deltaRow * deltaRow + deltaCol * deltaCol));
 }
-
-//struct Route shortestPath(const struct Map* map, const struct Point start, const struct Point dest) {
-//	struct Route result = { {0,0}, 0, DIVERSION };
-//	struct Point last = { -1, -1 };
-//	struct Point current = start;
-//	struct Route possible = { {0,0},0,0 };
-//	int close = 0;
-//
-//	while (!eqPt(current, dest) && close >= 0) {
-//		possible = getPossibleMoves(map, current, last);
-//		close = getClosestPoint(&possible, dest);
-//		if (close >= 0) {
-//			last = current;
-//			current = possible.points[close];
-//			addPtToRoute(&result, current);
-//		}
-//	}
-//
-//	return result;
-//}
 
 struct Route shortestPath(const struct Map* map, const struct Point start, const struct Point dest)
 {
@@ -485,33 +464,20 @@ void getShortestRoute(struct Map* deliveryMap, struct Truck Trucks[], struct Shi
 	shipment.size = size;
 	shipment.dest.row = num - 1;
 	shipment.dest.col = letter - 65;
-	//printf("%lf %lf %d %d\n", shipment.weight, shipment.size, shipment.dest.row, shipment.dest.col);
-	//printf("%d\n", findTruckForShipment(&routeMap, truck, shipment));
+	
 
 	int truckIdx = findTruckForShipment(deliveryMap, Trucks, shipment);
 	Trucks[truckIdx].availWeight -= shipment.weight;
 	Trucks[truckIdx].availSize -= shipment.size;
-	//printf("%lf %lf %c\n", truck[truckIdx].availWeight, truck[truckIdx].availSize, truck[truckIdx].route);
+	
 
-
-
-
-	//printf("%d\n", truckIdx);
-	//printf("%lf %lf %c\n", truck[truckIdx].availWeight, truck[truckIdx].availSize, truck[truckIdx].route);
 	struct Route route = getRouteFromTruck(Trucks[truckIdx]);
 
 
 	int shortestIdx = -1;
 	int shortest = 100;
 	struct Route shortestRoute = { {0, 0}, 0, 0 };
-	//int pathLength;
-	//printf("%d\n", route.numPoints);
-
-	/*for (int i = 0; i < route.numPoints; i++)
-	{
-		printf("%d: %d\n", i, shortestPath(&routeMap, route.points[i], shipment.dest).numPoints);
-
-	}*/
+	
 
 	for (int i = 0; i < route.numPoints; i++) {
 		//int pathLength = shortestPath(&routeMap, route.points[i], shipment.dest).numPoints;
