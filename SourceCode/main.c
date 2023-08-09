@@ -28,16 +28,16 @@ int main(void)
 	printMap(&routeMap, 1, 1);
 
 
-	int flag = 0, flag2 = 0;
+	int exit = 0, valid = 1;
 	do {
-
+		valid = 1;
 		char temp[3];
 		printf("Enter shipment weight, box size, and destination (0 0 x to stop): ");
 		scanf("%lf %lf %s", &weight, &size, str);
 
 		if (weight == 0.0 && size == 0.0 && strcmp(str, "x") == 0)
 		{
-			flag = 1;
+			exit = 1;
 		
 		}
 		else
@@ -52,85 +52,93 @@ int main(void)
 			letter = str[i];
 			num = atoi(temp);
 
-			if (!validateWeight(weight) && flag == 0) {
+			if (!validateWeight(weight) && exit == 0) {
 				printf("Invalid weight (must be 1-1000 Kg.)\n");
-
+				valid = 0;
 			}
-			if (!validateSize(size) && flag == 0) {
+			if (!validateSize(size) && exit == 0) {
 				printf("Invalid size\n");
-
+				valid = 0;
 			}
-			if (!validateAddress(num, letter) && flag == 0) {
+			if (!validateAddress(num, letter) && exit == 0) {
 				printf("Invalid destination\n");
+				valid = 0;
 			}
 			
-			shipment.weight = weight;
-			shipment.size = size;
-			shipment.dest.row = num - 1;
-			shipment.dest.col = letter - 65;
-			printf("%lf %lf %d %d\n", shipment.weight, shipment.size, shipment.dest.row, shipment.dest.col);
-			printf("%d\n", findTruckForShipment(&routeMap, truck, shipment));
-
-			int truckIdx = findTruckForShipment(&routeMap, truck, shipment);
-
-			printf("%d\n", truckIdx);
-			printf("%lf %lf %c\n", truck[truckIdx].availWeight, truck[truckIdx].availSize, truck[truckIdx].route);
-			//struct Route route = getRouteFromTruck(truck[truckIdx]);
-			
-
-			int shortestIdx;
-			int shortest = 100;
-			struct Route shortestRoute;
-			//int pathLength;
-			printf("%d\n", greenRoute.numPoints);
-
-			for (int i = 0; i < greenRoute.numPoints; i++)
+			if (valid) 
 			{
-				printf("%d: %d\n", i, shortestPath(&routeMap, greenRoute.points[i], shipment.dest).numPoints);
+				shipment.weight = weight;
+				shipment.size = size;
+				shipment.dest.row = num - 1;
+				shipment.dest.col = letter - 65;
+				//printf("%lf %lf %d %d\n", shipment.weight, shipment.size, shipment.dest.row, shipment.dest.col);
+				//printf("%d\n", findTruckForShipment(&routeMap, truck, shipment));
 
-			}
+				int truckIdx = findTruckForShipment(&routeMap, truck, shipment);
+				truck[truckIdx].availWeight -= shipment.weight;
+				truck[truckIdx].availSize -= shipment.size;
+				//printf("%lf %lf %c\n", truck[truckIdx].availWeight, truck[truckIdx].availSize, truck[truckIdx].route);
 
-			for (int i = 0; i < greenRoute.numPoints; i++)
-			{
-				if (shortestPath(&routeMap, greenRoute.points[i], shipment.dest).numPoints < shortest)
+
+				
+
+				//printf("%d\n", truckIdx);
+				printf("%lf %lf %c\n", truck[truckIdx].availWeight, truck[truckIdx].availSize, truck[truckIdx].route);
+				struct Route route = getRouteFromTruck(truck[truckIdx]);
+
+
+				int shortestIdx = -1;
+				int shortest = 100;
+				struct Route shortestRoute = { {0, 0}, 0, 0 };
+				//int pathLength;
+				//printf("%d\n", route.numPoints);
+
+				/*for (int i = 0; i < route.numPoints; i++)
 				{
-					shortestRoute = shortestPath(&routeMap, greenRoute.points[i], shipment.dest);
-					shortest = shortestPath(&routeMap, greenRoute.points[i], shipment.dest).numPoints;
-					shortestIdx = i;
-					
+					printf("%d: %d\n", i, shortestPath(&routeMap, route.points[i], shipment.dest).numPoints);
+
+				}*/
+
+				for (int i = 0; i < route.numPoints; i++) {
+					//int pathLength = shortestPath(&routeMap, route.points[i], shipment.dest).numPoints;
+					if (shortestPath(&routeMap, route.points[i], shipment.dest).numPoints < shortest) {
+						shortestRoute = shortestPath(&routeMap, route.points[i], shipment.dest);
+						shortest = shortestPath(&routeMap, route.points[i], shipment.dest).numPoints;
+						shortestIdx = i;
+					}
 				}
+
+				switch (truckIdx) {
+				case 0:
+					printf("Ship on BLUE LINE, ");
+					break;
+				case 1:
+					printf("Ship on GREEN LINE, ");
+					break;
+				case 2:
+					printf("Ship on YELLOW LINE, ");
+					break;
+				}
+				if (shortest) {
+					printf("divert: ");
+					printf("%d%c, ", route.points[shortestIdx].row + 1, (char)(route.points[shortestIdx].col + 65));
+					for (int i = 0; i < shortest; i++) {
+						printf("%d%c, ", shortestRoute.points[i].row + 1, (char)(shortestRoute.points[i].col + 65));
+					}
+					printf("%d%c", shipment.dest.row + 1, (char)(shipment.dest.col + 65));
+					printf("\n");
+				}
+				else {
+					printf("no diversion\n");
+				}
+
+				
 			}
 			
-			for (int i = 0; i < shortest; i++)
-			{
-				printf("%d %d\n", shortestRoute.points[i].row, shortestRoute.points[i].col);
-			}
-			//shortestPath(&routeMap, route.points[shortestIdx], shipment.dest);
-			/*int ret=0;
-			struct Route final;*/
-			//if (findTruckForShipment(&routeMap, truck, shipment)==0)
-			//{
-			//	//ret = getClosestPoint(&blueRoute, shipment.dest);
-			//	ret = shortestPath(&routeMap, )
-			//}
-			//else if (findTruckForShipment(&routeMap, truck, shipment) == 1)
-			//{
-			//	ret = getClosestPoint(&greenRoute, shipment.dest);
-			//}
-			//else if (findTruckForShipment(&routeMap, truck, shipment) == 2)
-			//{
-			//	ret = getClosestPoint(&yellowRoute, shipment.dest);
-			//}
-			/*printf("%d", ret);
-			final = getPossibleMoves(&routeMap, point[ret].start, shipment.dest);*/
-			/*while (final[i] != '\0')
-			{
-
-			}*/
-			//getPossibleMoves(&routeMap, truck[ret].start, shipment.dest);
+			
 		}
 
-	} while (flag == 0);
+	} while (exit == 0);
 	
 
 
