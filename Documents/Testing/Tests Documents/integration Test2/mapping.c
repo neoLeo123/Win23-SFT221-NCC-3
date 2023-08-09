@@ -399,22 +399,17 @@ struct Route getRouteFromTruck(struct Truck truck) {
 
 int getInput(double* weight, double* size, char* letter, int* num, int* exit)
 {
-	/*double weight, size;
-	int num = 0;
-	char letter = ' ';*/
+	
 	char str[4];
 	*exit = 0;
 	int valid = 1;
-	/*do
-	{*/
-	//valid = 1;
 	char temp[3];
 	printf("Enter shipment weight, box size, and destination (0 0 x to stop): ");
 	scanf("%lf %lf %s", weight, size, str);
 
 	if (*weight == 0.0 && *size == 0.0 && strcmp(str, "x") == 0)
 	{
-		exit = 1;
+		*exit = 1;
 	}
 	else
 	{
@@ -443,21 +438,11 @@ int getInput(double* weight, double* size, char* letter, int* num, int* exit)
 			printf("Invalid destination\n");
 			valid = 0;
 		}
-		//printf("%d %lf %lf %c %d\n", valid, *weight, *size, *letter, *num);
-
-		//if (valid)
-		//{
-		//	shipment->weight = weight;
-		//	shipment->size = size;
-		//	shipment->dest.row = num - 1;
-		//	shipment->dest.col = letter - 65;
-		//	//printf("%lf %lf %d %d\n", shipment.weight, shipment.size, shipment.dest.row, shipment.dest.col);
-		//	//printf("%d\n", findTruckForShipment(&routeMap, truck, shipment));
-		//}
+		
 	}
 	return valid;
 
-	/*} while (exit == 0);*/
+	
 }
 
 void getShortestRoute(struct Map* deliveryMap, struct Truck Trucks[], struct Shipment shipment, double weight, double size, char letter, int num)
@@ -476,7 +461,6 @@ void getShortestRoute(struct Map* deliveryMap, struct Truck Trucks[], struct Shi
 	struct Route shortestRoute = { {0, 0}, 0, 0 };
 
 	for (int i = 0; i < route.numPoints; i++) {
-		//int pathLength = shortestPath(&routeMap, route.points[i], shipment.dest).numPoints;
 		if (shortestPath(deliveryMap, route.points[i], shipment.dest).numPoints < shortest) {
 			shortestRoute = shortestPath(deliveryMap, route.points[i], shipment.dest);
 			shortest = shortestPath(deliveryMap, route.points[i], shipment.dest).numPoints;
