@@ -4,8 +4,6 @@
 
 void runIntegrationTests() {
 
-	int pass = 1;
-
 	double weight, size;
 	int num = 0;
 	char letter = ' ';
