@@ -174,4 +174,6 @@ int validateSize(double size);
 int validateAddress(int y, char x);
 int findTruckForShipment(struct Map* deliveryMap, struct Truck Trucks[], struct Shipment shipment);
 struct Route getRouteFromTruck(struct Truck truck);
+int getInput(double* weight, double* size, char* letter, int* num, int* exit);
+void getShortestRoute(struct Map* deliveryMap, struct Truck Trucks[], struct Shipment shipment, double weight, double size, char letter, int num);
 #endif
