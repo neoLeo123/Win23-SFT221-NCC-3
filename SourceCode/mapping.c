@@ -349,7 +349,7 @@ int findTruckForShipment(struct Map* deliveryMap, struct Truck Trucks[], struct 
 	// If there is only one truck with the shortest path, return that truck
 	if (shortestDistanceTruckCount == 1) {
 		for (int i = 0; i < NUMTRUCKS; i++) {
-			if (shortestDistanceTrucks[i] == validTrucks[i]) {
+			if (validTrucks[i] == 1 && shortestDistanceTrucks[i] == validTrucks[i]) {
 				return i;
 			}
 		}
@@ -457,6 +457,8 @@ void getShortestRoute(struct Map* deliveryMap, struct Truck Trucks[], struct Shi
 	Trucks[truckIdx].availWeight -= shipment.weight;
 	Trucks[truckIdx].availSize -= shipment.size;
 	struct Route route = getRouteFromTruck(Trucks[truckIdx]);
+
+	
 	int shortestIdx = -1;
 	int shortest = 100;
 	struct Route shortestRoute = { {0, 0}, 0, 0 };
