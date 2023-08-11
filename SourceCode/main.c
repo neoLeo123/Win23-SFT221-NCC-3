@@ -12,7 +12,6 @@ int main(void)
 	char letter = ' ';
 	int valid, exit;
 
-
 	struct Shipment shipment = { 0,0,{0,0} };
 	struct Truck truck[NUMTRUCKS] = { {1000, 36, 'B'}, {1000, 36, 'G'}, {1000, 36, 'Y'} };
 
@@ -27,6 +26,11 @@ int main(void)
 	printMap(&routeMap, 1, 1);
 
 
+	printf("\n=================\n");
+	printf("Seneca Deliveries\n");
+	printf("=================\n");
+
+
 	do
 	{
 		valid = getInput(&weight, &size, &letter, &num, &exit);
@@ -35,6 +39,11 @@ int main(void)
 			getShortestRoute(&routeMap, truck, shipment, weight, size, letter, num);
 		}
 	} while (exit == 0);
+
+	printf("Thanks for shipping with Seneca!\n");
+
+
+
 
 	return 0;
 }

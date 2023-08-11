@@ -203,6 +203,7 @@ double distance(const struct Point* p1, const struct Point* p2) {
 }
 
 
+
 struct Route shortestPath(const struct Map* map, const struct Point start, const struct Point dest)
 {
 	struct Route result = { {0,0}, 0, DIVERSION };
@@ -255,7 +256,7 @@ int getClosestPoint(const struct Route* route, const struct Point pt) {
 		if (dist < closestDist) {
 			closestDist = dist;
 			closestIdx = i;
-
+			
 		}
 	}
 	return closestIdx;
@@ -375,7 +376,7 @@ int findTruckForShipment(struct Map* deliveryMap, struct Truck Trucks[], struct 
 			}
 		}
 	}
-	//getPossibleMoves(&deliveryMap, closestPoints, shipment.dest);
+	
 	return res;
 
 }
@@ -383,65 +384,65 @@ int findTruckForShipment(struct Map* deliveryMap, struct Truck Trucks[], struct 
 struct Route getRouteFromTruck(struct Truck truck) {
 	struct Route returnRoute = { {0,0}, 0, 0 };
 	switch (truck.route) {
-	case 'Y':
+	case 'Y': 
 		returnRoute = getYellowRoute();
 		break;
-	case 'G':
+	case 'G': 
 		returnRoute = getGreenRoute();
 		break;
-	case 'B':
+	case 'B': 
 		returnRoute = getBlueRoute();
 		break;
 	}
 	return returnRoute;
 }
 
-int getInput(double* weight, double* size, char* letter, int* num, int* exit)
+int getInput(double* weight, double* size, char* letter, int* num, int* exit) 
 {
 	
 	char str[4];
-	char temp[3];
 	int valid = 1;
-	
 	*exit = 0;
+
 	
-	printf("Enter shipment weight, box size, and destination (0 0 x to stop): ");
-	scanf("%lf %lf %s", weight, size, str);
+		char temp[3];
+		printf("Enter shipment weight, box size, and destination (0 0 x to stop): ");
+		scanf("%lf %lf %s", weight, size, str);
 
-	if (*weight == 0.0 && *size == 0.0 && strcmp(str, "x") == 0)
-	{
-		*exit = 1;
-	}
-	else
-	{
-		int i = 0;
-		while (str[i] != '\0' && isdigit(str[i]))
+		if (*weight == 0.0 && *size == 0.0 && strcmp(str, "x") == 0)
 		{
-			temp[i] = str[i];
-			i++;
+			*exit = 1;
 		}
-		temp[i] = '\0';
-		*letter = str[i];
-		*num = atoi(temp);
+		else
+		{
+			int i = 0;
+			while (str[i] != '\0' && isdigit(str[i]))
+			{
+				temp[i] = str[i];
+				i++;
+			}
+			temp[i] = '\0';
+			*letter = str[i];
+			*num = atoi(temp);
 
-		if (!validateWeight(*weight) && *exit == 0)
-		{
-			printf("Invalid weight (must be 1-1000 Kg.)\n");
-			valid = 0;
+			if (!validateWeight(*weight) && *exit == 0)
+			{
+				printf("Invalid weight (must be 1-1000 Kg.)\n");
+				valid = 0;
+			}
+			if (!validateSize(*size) && *exit == 0)
+			{
+				printf("Invalid size\n");
+				valid = 0;
+			}
+			if (!validateAddress(*num, *letter) && *exit == 0)
+			{
+				printf("Invalid destination\n");
+				valid = 0;
+			}
+			
 		}
-		if (!validateSize(*size) && *exit == 0)
-		{
-			printf("Invalid size\n");
-			valid = 0;
-		}
-		if (!validateAddress(*num, *letter) && *exit == 0)
-		{
-			printf("Invalid destination\n");
-			valid = 0;
-		}
-		
-	}
-	return valid;
+		return valid;
 
 	
 }
@@ -454,45 +455,50 @@ void getShortestRoute(struct Map* deliveryMap, struct Truck Trucks[], struct Shi
 	shipment.dest.col = letter - 65;
 
 	int truckIdx = findTruckForShipment(deliveryMap, Trucks, shipment);
-	Trucks[truckIdx].availWeight -= shipment.weight;
-	Trucks[truckIdx].availSize -= shipment.size;
-	struct Route route = getRouteFromTruck(Trucks[truckIdx]);
+	if (truckIdx != -1) {
+		Trucks[truckIdx].availWeight -= shipment.weight;
+		Trucks[truckIdx].availSize -= shipment.size;
+		
+		struct Route route = getRouteFromTruck(Trucks[truckIdx]);
 
-	
-	int shortestIdx = -1;
-	int shortest = 100;
-	struct Route shortestRoute = { {0, 0}, 0, 0 };
-
-	for (int i = 0; i < route.numPoints; i++) {
-		if (shortestPath(deliveryMap, route.points[i], shipment.dest).numPoints < shortest) {
-			shortestRoute = shortestPath(deliveryMap, route.points[i], shipment.dest);
-			shortest = shortestPath(deliveryMap, route.points[i], shipment.dest).numPoints;
-			shortestIdx = i;
+		int shortestIdx = -1;
+		int shortest = 100;
+		struct Route shortestRoute = { {0, 0}, 0, 0 };
+		
+		for (int i = 0; i < route.numPoints; i++) {
+			if (shortestPath(deliveryMap, route.points[i], shipment.dest).numPoints < shortest) {
+				shortestRoute = shortestPath(deliveryMap, route.points[i], shipment.dest);
+				shortest = shortestPath(deliveryMap, route.points[i], shipment.dest).numPoints;
+				shortestIdx = i;
+			}
 		}
-	}
 
-	switch (truckIdx) {
-	case 0:
-		printf("Ship on BLUE LINE, ");
-		break;
-	case 1:
-		printf("Ship on GREEN LINE, ");
-		break;
-	case 2:
-		printf("Ship on YELLOW LINE, ");
-		break;
-	}
-	if (shortest) {
-		printf("divert: ");
-		printf("%d%c, ", route.points[shortestIdx].row + 1, (char)(route.points[shortestIdx].col + 65));
-		for (int i = 0; i < shortest; i++) {
-			printf("%d%c, ", shortestRoute.points[i].row + 1, (char)(shortestRoute.points[i].col + 65));
+		switch (truckIdx) {
+		case 0:
+			printf("Ship on BLUE LINE, ");
+			break;
+		case 1:
+			printf("Ship on GREEN LINE, ");
+			break;
+		case 2:
+			printf("Ship on YELLOW LINE, ");
+			break;
 		}
-		printf("%d%c", shipment.dest.row + 1, (char)(shipment.dest.col + 65));
-		printf("\n");
+		if (shortest) {
+			printf("divert: ");
+			printf("%d%c, ", route.points[shortestIdx].row + 1, (char)(route.points[shortestIdx].col + 65));
+			for (int i = 0; i < shortest; i++) {
+				printf("%d%c, ", shortestRoute.points[i].row + 1, (char)(shortestRoute.points[i].col + 65));
+			}
+			printf("%d%c", shipment.dest.row + 1, (char)(shipment.dest.col + 65));
+			printf("\n");
+		}
+		else {
+			printf("no diversion\n");
+		}
 	}
 	else {
-		printf("no diversion\n");
+		printf("Ships tomorrow!\n");
 	}
 
 }
